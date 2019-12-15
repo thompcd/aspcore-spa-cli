@@ -10,7 +10,8 @@
     "start:dev": "sirv public --dev --single --port 8080"
   },
   "dependencies": {
-    "navaid": "^1.0.2"
+    "navaid": "^1.0.2",
+    "svelte-sortable-list": "^1.1.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.3",
