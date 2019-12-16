@@ -1,5 +1,7 @@
 <Nav {active} />
-
+<svelte:head>
+<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/sketchy/bootstrap.min.css" rel="stylesheet" integrity="sha384-2kOE+STGAkgemIkUbGtoZ8dJLqfvJ/xzRnimSkQN7viOfwRvWseF7lqcuNXmjwrL" crossorigin="anonymous">
+</svelte:head>
 <main>
 	<svelte:component this={Route} {params} />
 </main>
