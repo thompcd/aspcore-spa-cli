@@ -16,6 +16,15 @@ namespace TestFramework
         PowerCycling
     }
 
+    public enum TestValueType
+    {
+        String,
+        Bool,
+        Double,
+        Int,
+        PassFail
+    }
+
     public class LeakLog
     {
         public string TestName;
@@ -123,6 +132,7 @@ namespace TestFramework
             }
         }
 
+        public TestValueType TestValueType; //used to cast type from string
         public string TestClass;
         public string TestCode;
         public string ExpectedValue;
@@ -157,7 +167,7 @@ namespace TestFramework
         public Test(){}
 
 
-        public Test(string testName, string lowerLimit, string upperLimit, string testCode, uint sendPGN = 0, uint receivePGN = 0, string testClass = "")
+        public Test(string testName, string lowerLimit, string upperLimit, string testCode, uint sendPGN = 0, uint receivePGN = 0, string testClass = "", TestValueType testType=TestValueType.String)
         {
             TestName = testName;
             LowerLimit = lowerLimit;
@@ -165,6 +175,7 @@ namespace TestFramework
             TestCode = testCode;
             SendPGN = sendPGN;
             ReceivePGN = receivePGN;
+            TestValueType = testType;
 
             if(testClass == "")
             {

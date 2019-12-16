@@ -1,8 +1,7 @@
 <nav>
 	<ul>
-		<li><a class="{ isActive('home') }" href="/">home</a></li>
 		<li><a class="{ isActive('about') }" href="/about">about</a></li>
-		<li><a class="{ isActive('fetchdata') }" href="/fetchdata">fetch-data</a></li>
+		<li><a class="{ isActive('build') }" href="/build">test builder</a></li>
 	</ul>
 </nav>
 

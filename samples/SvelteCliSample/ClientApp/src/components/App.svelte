@@ -39,7 +39,7 @@
 	const router = Navaid('/')
 		.on('/', () => import('../routes/Home.svelte').then(draw))
 		.on('/about', () => import('../routes/About.svelte').then(draw))
-		.on('/fetchdata', () => import('../routes/FetchData.svelte').then(draw))
+		.on('/build', () => import('../routes/Build.svelte').then(draw))
 		// .on('/blog/:title', obj => import('../routes/Article.svelte').then(m => draw(m, obj)))
 		.listen();
 

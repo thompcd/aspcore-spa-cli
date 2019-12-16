@@ -2,6 +2,7 @@
 	import { selectedTests } from '../store/stores.js';
 
 	export const addTest = n => {
+        console.log("about to add test")
 		selectedTests.set(n => (console.log("defined?" , n)));
 	}
 </script>

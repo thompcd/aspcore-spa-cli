@@ -1,10 +1,12 @@
 <script>
     import { selectedTests } from '../store/stores.js';
     import AddTest from './AddTest.svelte';
+    import RemoveTest from './RemoveTest.svelte';
     import {slide} from 'svelte/transition';
 
 	export let item;
     export let index;
+    export let showAddOption=true;
 
 	let addDescrVisible = false;
     
@@ -33,7 +35,12 @@
     <button type="button" class="btn btn-outline-secondary" on:click={() => addDescrVisible = !addDescrVisible}>
 	Expand / Collapse
     </button>
+    {#if showAddOption}
     <AddTest />
+    {:else}
+    <RemoveTest />
+    {/if}
+
     {#if addDescrVisible}
     <div transition:slide>
         <fieldset class="form-group">

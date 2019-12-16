@@ -10,16 +10,11 @@ namespace SvelteCliSample.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class TestsController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private readonly ILogger<TestsController> _logger;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public TestsController(ILogger<TestsController> logger)
         {
             _logger = logger;
         }
@@ -30,26 +25,40 @@ namespace SvelteCliSample.Controllers
             var testDummy = new Test(){
                 TestName = "Digital Input 1 Hi",
                 TestCode = "DIN1HI",
-                LowerLimit = "4.95",
-                UpperLimit = "5.05",
+                LowerLimit = "PASS",
+                UpperLimit = "PASS",
                 Result = "",
                 TestStatus = "",
-                TestValue = ""
+                TestValue = "",
+                TestValueType = TestValueType.PassFail
 
             };
             var testDummy2 = new Test(){
                 TestName = "Digital Input 2 Hi",
                 TestCode = "DIN2HI",
-                LowerLimit = "500000",
-                UpperLimit = "20000000",
+                LowerLimit = "PASS",
+                UpperLimit = "PASS",
                 Result = "",
                 TestStatus = "",
-                TestValue = ""
+                TestValue = "",
+                TestValueType = TestValueType.PassFail
             };
+            var testDummy3 = new Test(){
+                TestName = "Analog Input 1, 0-5V",
+                TestCode = "AIN105V",
+                LowerLimit = "4.5",
+                UpperLimit = "4.7",
+                Result = "",
+                TestStatus = "",
+                TestValue = "",
+                TestValueType = TestValueType.Double
+            };
+
             var testList = new List<Test>{
             };
             testList.Add(testDummy);
             testList.Add(testDummy2);
+            testList.Add(testDummy3);
             return testList;
         }
     }
