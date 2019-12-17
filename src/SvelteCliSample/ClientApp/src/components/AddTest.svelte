@@ -1,5 +1,5 @@
 <script>
-	import { selectedTests } from '../store/stores.js';
+	// import { selectedTests } from '../store/stores.js';
 
 	export const addTest = n => {
         console.log("about to add test")

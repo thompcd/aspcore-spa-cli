@@ -1,5 +1,5 @@
 <script>
-	import { selectedTests } from '../store/stores.js';
+	// import { selectedTests } from '../store/stores.js';
 
 	export const removeTest = n => {
         console.log("about to remove test")

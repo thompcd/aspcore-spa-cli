@@ -1,8 +1,9 @@
 <script>
-    import { selectedTests } from '../store/stores.js';
+    // import { selectedTests } from '../store/stores.js';
     import AddTest from './AddTest.svelte';
     import RemoveTest from './RemoveTest.svelte';
     import {slide} from 'svelte/transition';
+    import { selectTest, unSelectTest } from '../store/tests.js'
 
 	export let item;
     export let index;
@@ -10,7 +11,17 @@
 
 	let addDescrVisible = false;
     
-    console.log("list item", item)
+    //   const toggleSelected = () => {
+    //     if (showAddOption) {
+    //     selectTest($currentUser.id);
+    //     } else {
+    //     addFollower($currentUser.id);
+    //     }
+    //     following = !following;
+    // };
+
+
+
 </script>
 
 <style>
