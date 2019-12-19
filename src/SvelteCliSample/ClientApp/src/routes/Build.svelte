@@ -2,53 +2,26 @@
     import { onMount } from 'svelte';
     import SortableList from 'svelte-sortable-list';
     import Test from '../components/Test.svelte';
-    import { availableTests, selectedTests, sortAvailableTests } from '../store/tests.js'
-    // import { immerObservable} from './store/store.js';
-
-    // import { selectedTests } from '../store/store.js';
-
-    // export let availableTests = [];
+    import { availableTests } from '../store/tests.js'
+    
     let params;
     let exportName = "TestList";
+    
+    $: selectedTests = $availableTests.filter( i => i.testSelected === true);
+    $: unSelectedTests = $availableTests.filter( i => i.testSelected === false);
+    $:console.log($availableTests)
 
-    // onMount(() => {
-    //     fetch('/api/tests')
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             availableTests = data;
-    //         });
-    // });
 
-    // let list;
-    // $: availableTests = availableTests.map((obj, i) => ({ ...obj, id: i}));
-    // $: console.log("lists: ", list);
-    // $: {
-    //     console.log("availableTests: ", availableTests);
-    //     console.log("available test string: ", JSON.stringify(availableTests))
-    // }
-
-    // const unsubscribe = selectedTests.subscribe( value => {
-    //     list = value;
-    // });
-
-    // const toggleFollow = () => {
-    //     if (following) {
-    //     removeFollower($currentUser.id);
-    //     } else {
-    //     addFollower($currentUser.id);
-    //     }
-    //     following = !following;
-    // };
-
-    // const sortList = ev => {list = ev.detail};
-    const sortList = ev => {
-        return sortAvailableTests(ev);
+    $: {
+        availableTests
     }
 
+    const sortAvailableTests = ev => { availableTests.set(ev.detail) };
+    const sortunSelectedList = ev => { unSelectedTests = (ev.detail) };
+    const sortSelectedList = ev => { selectedTests = (ev.detail) };
 
     const handleExport = () => { 
-        let list = $selectedTests;
-        downloadObjectAsJson(list, exportName);
+        downloadObjectAsJson(selectedTests, exportName);
     };
 
    function downloadObjectAsJson(exportObj, exportName){
@@ -79,19 +52,19 @@
         <h2>Available Tests</h2>
         <small id="availableTestHelp" class="form-text text-muted">These are the default tests supported at the moment.<br>Feel free to edit some limits and add them to your current test list.</small>
         </div>
-        <!-- {#each $availableTests as {testName, id}}
-        
-        <h2>{id}</h2><h1>{testName}</h1>
-        {/each} -->
-        {#if $availableTests}
-            <SortableList 
-            list={$availableTests} 
-            key="id" 
-            on:sort={sortList}
+
+        {#if unSelectedTests}
+            {#each unSelectedTests as item, index}
+            <Test {item} {index}/>
+            {/each}
+            <!-- <SortableList 
+            list={unSelectedTests} 
+            key="sortId" 
+            on:sort={sortunSelectedList}
             let:item
             let:index >
                 <Test {item} {index}/>
-            </SortableList>
+            </SortableList> -->
         {:else}
             <p><em>Loading...</em></p>
         {/if}
@@ -102,14 +75,14 @@
         <small id="availableTestHelp" class="form-text text-muted">These are the tests that get saved. Make sure they're unique!</small>
         </div>
 
-        {#if $selectedTests}
+        {#if selectedTests}
             <SortableList 
-            list={$selectedTests} 
-            key="id" 
-            on:sort={sortList}
+            list={selectedTests} 
+            key="sortId" 
+            on:sort={sortSelectedList}
             let:item
             let:index >
-                <Test {item} {index} showAddOption={false}/>
+                <Test {item} {index}/>
             </SortableList>
         {:else}
             <p style="text-align:center;"><em>No tests selected</em></p>

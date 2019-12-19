@@ -1,9 +1,10 @@
 <script>
-	// import { selectedTests } from '../store/stores.js';
+	import { availableTests, selectTest} from '../store/tests.js';
 
 	export const addTest = n => {
-        console.log("about to add test")
-		selectedTests.set(n => (console.log("defined?" , n)));
+		selectTest(n)
+        // console.log("about to add test")
+		// availableTests.set(n => (console.log("defined?" , n)));
 	}
 </script>
 

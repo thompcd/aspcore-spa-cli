@@ -3,23 +3,46 @@
     import AddTest from './AddTest.svelte';
     import RemoveTest from './RemoveTest.svelte';
     import {slide} from 'svelte/transition';
-    import { selectTest, unSelectTest } from '../store/tests.js'
+    import { availableTests } from '../store/tests.js'
 
 	export let item;
     export let index;
-    export let showAddOption=true;
 
-	let addDescrVisible = false;
+    let addDescrVisible = false;
     
-    //   const toggleSelected = () => {
-    //     if (showAddOption) {
-    //     selectTest($currentUser.id);
-    //     } else {
-    //     addFollower($currentUser.id);
-    //     }
-    //     following = !following;
-    // };
+      const toggleSelected = () => {
+        // item.testSelected = !item.testSelected;
+        
+        //create copy of tests, make it an array type
+        let tests = $availableTests;
+        console.log("tests",tests)
 
+       //find index location by id
+       console.log(`searching for id ${item.id}`)
+        let itemIndex = tests.findIndex( i => i.id === item.id)
+        console.log("item index", itemIndex)
+
+        //find item by id
+        let itemAtIndex = tests.find( i => i.id === itemIndex)
+        console.log("item at index", itemAtIndex)
+
+        itemAtIndex.testSelected = !item.testSelected
+
+        //insert copy with replaceAt
+        const newArray = replaceAt(tests, index, itemAtIndex);
+        console.log("new array", newArray)
+
+        //set store with copy
+        availableTests.set(newArray);
+
+    };
+
+    function replaceAt(array, index, value) {
+        const ret = array.slice(0);
+        console.log("ret",ret)
+        ret[index] = value;
+        return ret;
+    }
 
 
 </script>
@@ -46,10 +69,14 @@
     <button type="button" class="btn btn-outline-secondary" on:click={() => addDescrVisible = !addDescrVisible}>
 	Expand / Collapse
     </button>
-    {#if showAddOption}
-    <AddTest />
+    {#if !item.testSelected}
+    <button type="button" class="btn btn-warning" on:click={toggleSelected}>
+	Add To Selected Tests
+    </button>
     {:else}
-    <RemoveTest />
+    <button type="button" class="btn btn-danger" on:click={toggleSelected}>
+	Remove From Selected Tests
+    </button>
     {/if}
 
     {#if addDescrVisible}
