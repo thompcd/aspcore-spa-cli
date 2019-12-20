@@ -55,4 +55,18 @@
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
+	:global(h1, h2, h3, h4, small, p, label){
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+	}
+
+	:global(input[type=text] > *){
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+	z-index: 10;
+	pointer-events: none;
+	}
+
 </style>

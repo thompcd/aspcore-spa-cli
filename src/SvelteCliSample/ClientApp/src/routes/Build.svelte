@@ -10,11 +10,8 @@
     $: selectedTests = $availableTests.filter( i => i.testSelected === true);
     $: unSelectedTests = $availableTests.filter( i => i.testSelected === false);
     $:console.log($availableTests)
-
-
-    $: {
-        availableTests
-    }
+    $:console.log("selected tests: ", selectedTests)
+    $:console.log("unSelected tests: ", unSelectedTests)
 
     const sortAvailableTests = ev => { availableTests.set(ev.detail) };
     const sortunSelectedList = ev => { unSelectedTests = (ev.detail) };
@@ -25,7 +22,7 @@
     };
 
    function downloadObjectAsJson(exportObj, exportName){
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, "\t"));
     var downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href",     dataStr);
     downloadAnchorNode.setAttribute("download", exportName + ".json");
@@ -48,10 +45,9 @@
 
 <div class="lists">
     <div class="tests" ref="tests">
-        <div class="section">
+        <div class="">
         <h2>Available Tests</h2>
-        <small id="availableTestHelp" class="form-text text-muted">These are the default tests supported at the moment.<br>Feel free to edit some limits and add them to your current test list.</small>
-        </div>
+        <small class="form-text text-muted section">These are the default tests supported at the moment.<br>Feel free to edit some limits and add them to your current test list.</small>
 
         {#if unSelectedTests}
             {#each unSelectedTests as item, index}
@@ -68,25 +64,28 @@
         {:else}
             <p><em>Loading...</em></p>
         {/if}
-    </div>
-        <div>
-        <div class="section">
-        <h2 class="text-warning">Selected Tests</h2>
-        <small id="availableTestHelp" class="form-text text-muted">These are the tests that get saved. Make sure they're unique!</small>
         </div>
 
+    </div>
+        <div>
+        <div class="">
+        <h2 class="text-warning">Selected Tests</h2>
+        <small class="form-text text-muted section">These are the tests that get saved.<br>Drag them into the order you want to test them!</small>
+
         {#if selectedTests}
+        <!-- TODO: make hoverable -->
             <SortableList 
             list={selectedTests} 
             key="sortId" 
             on:sort={sortSelectedList}
             let:item
             let:index >
-                <Test {item} {index}/>
+                <Test {item} {index} selected={true}/>
             </SortableList>
         {:else}
             <p style="text-align:center;"><em>No tests selected</em></p>
         {/if}
+        </div>
     </div>
 </div>
 
@@ -108,7 +107,13 @@ form{
 
 .section{
     /* fixed subtext height for alignment, check you don't have text collision if you adjust this */
-    height: 5rem; 
-    margin-bottom: 1rem;
+    height: 2.2rem; 
+    margin-bottom: .8rem;
+    text-overflow: '';
+    overflow: hidden;
+}
+
+small{
+    padding-bottom: 2rem;
 }
 </style>

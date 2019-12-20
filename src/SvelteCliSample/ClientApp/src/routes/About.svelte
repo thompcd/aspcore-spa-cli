@@ -1,4 +1,5 @@
 <script>
+
 // The proper structure for a part number's test list is
 
 const testList = {
@@ -63,17 +64,20 @@ const availableTests = [
 	]
   $:console.log(JSON.stringify(testList));
   $:console.log(JSON.stringify(availableTests));
+
+
 </script>
 
 
 <svelte:head>
 	<title>About</title>
 </svelte:head>
+
 <h1>A sample test list structure</h1>
 <h8>
-{JSON.stringify(testList)}
+{JSON.stringify(testList, null, "\t")}
 </h8>
 <br>
 <h8>
-{JSON.stringify(availableTests)}
+{JSON.stringify(availableTests, null, "\t")}
 </h8>
