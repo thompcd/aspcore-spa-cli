@@ -7,7 +7,7 @@
 
 	export let item;
     export let collapsible = false;
-    let index;
+    export let index;
     let addDescrVisible = false;
 
 </script>

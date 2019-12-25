@@ -4,12 +4,15 @@
     import Test from '../components/Test.svelte';
     import { availableTests } from '../store/tests.js'
     
+
+
     let params;
     let exportName = "TestList";
     let selectedTests = []
 
     const sortSelectedList = ev => { selectedTests = (ev.detail) };
     const handleExport = () => { downloadObjectAsJson(selectedTests, exportName) };
+
 
     function addTest(item) {
         const retVal = selectedTests.find( obj => obj === item)
@@ -77,7 +80,7 @@
         {#if selectedTests.length}
             <SortableList 
             bind:list={selectedTests} 
-            key="sortId" 
+                key="id" 
             on:sort={sortSelectedList}
             let:item
             let:index >

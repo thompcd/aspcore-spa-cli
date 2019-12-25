@@ -1,4 +1,5 @@
-import {derived, writable} from 'svelte/store';
+import { writable } from 'svelte/store';
+// import { onMount } from 'svelte';
 
     // onMount(() => {
     //     fetch('/api/tests')
@@ -11,7 +12,6 @@ import {derived, writable} from 'svelte/store';
 //should come from the server without testSelected or id, which should be mapped onto the results
 export const availableTests = writable([
 	{	
-    testSelected:false,
 		testName:"Digital Input 1 Hi",
 		upperLimit:"PASS",
 		testValue:"",
@@ -19,11 +19,9 @@ export const availableTests = writable([
 		result:"",
     testStatus:"",
     id:0,
-    testValueType:"PassFail",
-    sortId:0
+    testValueType:"PassFail"
   },
 	{	
-    testSelected:false,
 		testName:"Digital Input 2 Hi",
 		upperLimit:"PASS",
 		testValue:"",
@@ -31,11 +29,9 @@ export const availableTests = writable([
 		result:"",
     testStatus:"",
     id:1,
-    testValueType:"PassFail",
-    sortId:1
+    testValueType:"PassFail"
   },
 	{	
-    testSelected:false,
 		testName:"Analog Input 1, 0-5V",
 		upperLimit:"4.5",
 		testValue:"",
@@ -43,8 +39,7 @@ export const availableTests = writable([
 		result:"",
     testStatus:"",
     id:2,
-    testValueType:"Double",
-    sortId:2
+    testValueType:"Double"
   }
     ]);
 
