@@ -11,7 +11,7 @@ import {derived, writable} from 'svelte/store';
 //should come from the server without testSelected or id, which should be mapped onto the results
 export const availableTests = writable([
 	{	
-    testSelected:false,
+    testSelected:true,
 		testName:"Digital Input 1 Hi",
 		upperLimit:"PASS",
 		testValue:"",
@@ -23,7 +23,7 @@ export const availableTests = writable([
     sortId:0
   },
 	{	
-    testSelected:true,
+    testSelected:false,
 		testName:"Digital Input 2 Hi",
 		upperLimit:"PASS",
 		testValue:"",
@@ -35,7 +35,7 @@ export const availableTests = writable([
     sortId:1
   },
 	{	
-    testSelected:true,
+    testSelected:false,
 		testName:"Analog Input 1, 0-5V",
 		upperLimit:"4.5",
 		testValue:"",

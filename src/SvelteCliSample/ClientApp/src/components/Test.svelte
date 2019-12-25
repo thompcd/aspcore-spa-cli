@@ -1,10 +1,25 @@
 <script>
     import {slide} from 'svelte/transition';
     import { availableTests } from '../store/tests.js'
+    import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
 
 	export let item;
     export let index;
-    export let selected = false;
+    export let collapsible = false;
+
+	function addTest() {
+		dispatch('add', {
+			id: `${item.id}`
+		});
+    }
+    
+    function removeTest() {
+		dispatch('remove', {
+			id: `${item.id}`
+		});
+	}
 
     let addDescrVisible = false;
     
@@ -16,7 +31,7 @@
           //unselected -> selected
 
           
-        item.testSelected = !item.testSelected;
+        // item.testSelected = !item.testSelected;
         
         //create copy of tests, make it an array type
         let tests = $availableTests;
@@ -97,26 +112,18 @@
 
 </style>
 
-<div class="test-entry" class:selected="{selected === true}">
+<div class="test-entry" class:selected="{collapsible === false}">
     <h1>
         {#if item.testSelected}<span class="orderIndex">{index+1}</span>{/if}
         {item.testName}
     </h1>
-    {#if !item.testSelected}
-    <button type="button" class="btn btn-outline-secondary" on:click={() => addDescrVisible = !addDescrVisible}>
-	Edit
-    </button>
-    <button type="button" class="btn btn-warning" on:click={toggleSelected}>
-	Add To Selected Tests
-    </button>
-    {:else}
+    {#if collapsible}
     <button type="button" class="btn btn-outline-secondary" on:click={() => addDescrVisible = !addDescrVisible}>
 	View Details
     </button>
-    <button type="button" class="btn btn-danger" on:click={toggleSelected}>
-	Remove From Selected Tests
-    </button>
     {/if}
+
+    <slot name="actionButton"><!-- optional fallback --></slot>
 
     {#if addDescrVisible}
     <div transition:slide>
