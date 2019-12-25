@@ -4,15 +4,12 @@
     import Test from '../components/Test.svelte';
     import { availableTests } from '../store/tests.js'
     
-
-
     let params;
     let exportName = "TestList";
     let selectedTests = []
 
     const sortSelectedList = ev => { selectedTests = (ev.detail) };
     const handleExport = () => { downloadObjectAsJson(selectedTests, exportName) };
-
 
     function addTest(item) {
         const retVal = selectedTests.find( obj => obj === item)
@@ -92,7 +89,9 @@
                 </Test>
             </SortableList>
         {:else}
-            <p style="text-align:center;"><em>No tests selected</em></p>
+            <div style="text-align:center; height: 300px; display: flex; align-items: center;">
+            <em style="padding:4rem;">No tests selected</em>
+            </div>
         {/if}
     </div>
 </div>
@@ -114,7 +113,10 @@ form{
 }
 .tests{
     width: 33rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
+
 .section{
     /* fixed subtext height for alignment, check you don't have text collision if you adjust this */
     height: 2.2rem; 
