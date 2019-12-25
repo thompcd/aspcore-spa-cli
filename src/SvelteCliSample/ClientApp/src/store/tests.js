@@ -11,7 +11,7 @@ import {derived, writable} from 'svelte/store';
 //should come from the server without testSelected or id, which should be mapped onto the results
 export const availableTests = writable([
 	{	
-    testSelected:true,
+    testSelected:false,
 		testName:"Digital Input 1 Hi",
 		upperLimit:"PASS",
 		testValue:"",
@@ -48,43 +48,4 @@ export const availableTests = writable([
   }
     ]);
 
-// export const selectedTests =  derived(
-//   availableTests,
-//   $availableTests => {
-//     return filterBySelected($availableTests)
-//   })
-
-export const availableTest = derived(
-  availableTests,
-  $availableTests => {
-    return (availableTests.f)
-  }
-)
-
-function filterBySelected(availableTests){
-  return availableTests.filter(test => test.testSelected)
-} 
-
-function setById(ID){
-  return (availableTests.filter(test => test.id === ID).testSelected = true)
-}
-
-export const orderSelectedTests = i => {
-
-}
-
-export const selectTest = i => {
-  availableTests.update( setById(i))
-}
-
-// export const selectTest =  i => {
-//   availableTests.update(draft => {
-//         draft.find(v=> v.id === i).testSelected = true;
-//     });
-// };
-export const unSelectTest =  i => {
-  availableTests.update(draft => {
-        draft.find(v=> v.id === i).testSelected = false;
-    });
-};
 
