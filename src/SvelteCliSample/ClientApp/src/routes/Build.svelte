@@ -3,13 +3,40 @@
     import SortableList from 'svelte-sortable-list';
     import Test from '../components/Test.svelte';
     import { availableTests } from '../store/tests.js'
+    import Select from 'svelte-select';
+
     
     let params;
     let exportName = "TestList";
-    let selectedTests = []
+    let partNumberInput = "";
+    let selectedTests = [];
+    $: isCreateDisabled = ( selectedTests.length < 1 )
+    $: console.log("is create disabled", isCreateDisabled);
 
     const sortSelectedList = ev => { selectedTests = (ev.detail) };
     const handleExport = () => { downloadObjectAsJson(selectedTests, exportName) };
+    const groupBy = (item) => item.group;
+
+    const stationItems = [
+    {value: 'PREP', label: 'Prepare for Production', group: 'Testing'},
+    {value: 'EOLT', label: 'End of Line Tester', group: 'Testing'},
+    {value: 'PROG', label: 'End of Line Programmer', group: 'Programming'},
+    {value: 'LEAK', label: 'Leak Tester', group: 'Assembly'},
+    {value: 'VIZN', label: 'Visual Inspection', group: 'Assembly'},
+    {value: 'GLUE', label: 'Automated Glue Machine', group: 'Assembly'},
+    {value: 'BONE', label: 'PCBA Programmer', group: 'Programming'}
+    ];
+    
+    const cellItems = [
+    {value: '5812', label: 'Skinny Peat / Black Label', group: 'M2'},
+    {value: '5813', label: 'MPC10 / MPC20', group: 'Mid Cost'},
+    {value: '5814', label: 'PV480 / PV485 / HV700', group: 'Low Cost'},
+    {value: '5823', label: 'Furious', group: 'M2'},
+    {value: '5824', label: 'Scallywag', group: 'M2'},
+    {value: '5875', label: 'GPS Puck', group: 'Renesas'},
+    {value: '5830', label: 'LM7', group: 'E2'},
+    {value: '5831', label: 'LM4', group: 'E2'}
+	];
 
     function addTest(item) {
         const retVal = selectedTests.find( obj => obj === item)
@@ -47,10 +74,24 @@
 <div>
     <h1>Test Builder</h1>
     <form>
-        <button type="button" class="btn btn-secondary" on:click={handleExport}>Create Test List</button>
+        <div>
+        <label>Part Number</label>
+        <input type="text" bind:value={partNumberInput} placeholder="e.g. 78350777"/>
+        </div>
+        <div class="select">
+        <label>Station Type</label>
+        <Select items={stationItems} {groupBy}></Select>
+        </div>
+        <div class="select">
+        <label>Production Cell</label>
+        <Select items={cellItems} {groupBy}></Select>
+        </div>
+        <div>
         <label> File Name</label>
         <input type="text" bind:value={exportName} placeholder="file name"/>
-        <small id="emailHelp" class="form-text text-muted">Use this to save files for production.</small>
+        </div>
+        <button type="button" class="btn btn-primary" on:click={handleExport} disabled={isCreateDisabled}>Save Test List</button>
+        <small id="emailHelp" class="form-text text-muted">After you select tests, you can download the list for production.</small>
     </form>
 
 <div class="lists">
@@ -104,6 +145,11 @@ form{
     display:inline-block;
     margin-bottom: 4rem;
 }
+form div{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+}
 
 .lists{
     width: 100%;
@@ -115,6 +161,11 @@ form{
     width: 33rem;
     padding-left: 2rem;
     padding-right: 2rem;
+}
+.select{
+    --borderRadius: default;
+    --placeholderColor: default;
+    padding: 1rem 0;
 }
 
 .section{
@@ -141,5 +192,11 @@ small{
     border-radius: 4px;
     width: 4rem;
     text-align: center;
+}
+
+button:disabled,
+button[disabled]{
+  opacity: 0.65; 
+  cursor: not-allowed;
 }
 </style>
