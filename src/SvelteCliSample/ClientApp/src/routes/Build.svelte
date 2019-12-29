@@ -4,7 +4,7 @@
     import Test from '../components/Test.svelte';
     import { availableTests } from '../store/tests.js'
     import Select from 'svelte-select';
-
+    import Modal from '../components/Modal.svelte';
     
     let params;
     let exportName = "TestList";
@@ -12,17 +12,28 @@
     let selectedTests = [];
     let selectedStations;
     let selectedCells;
+    let showDuplicateTestsModal = false;
+    let showInstructions = false;
+
+    $: isPartNumberValid =  partNumberInput.length > 7;
+
     $: isCreateDisabled = ( (selectedTests.length < 1) || 
-    (partNumberInput.length <= 7) || 
+    (!isPartNumberValid) || 
     (selectedCells === undefined) || 
     (selectedStations === undefined) )
+    
+    $: {
+        if (!isCreateDisabled){
+            exportName = `${partNumberInput}-${selectedCells.value}-${selectedStations.value}`;
+        }
+    }
 
     const optionIdentifier = 'label';
     const placholderString = 'Search or Browse...'
     const sortSelectedList = ev => { selectedTests = (ev.detail) };
     const handleExport = () => { downloadObjectAsJson(selectedTests, exportName) };
+    const handleClickHelp = () => { showInstructions = true };
     const groupBy = (item) => item.group;
-    const displayString = (item) => `${item.value} - ${item.label}`;
 
     const stationItems = [
     {value: 'PREP', label: 'Prepare for Production', group: 'Testing'},
@@ -67,13 +78,13 @@
     {value: '5875', label: 'XMD', group: 'H8'},
     {value: '5809', label: 'PV101', group: 'MONOCOLOR'},
     {value: '5810', label: 'AQUASTAR', group: 'H8'},
-	];
+    ];
 
     function addTest(item) {
         const retVal = selectedTests.find( obj => obj === item)
 
         if (retVal){
-            alert(`${item.testName} is already selected`)
+            showDuplicateTestsModal = true;
             return
         }
 
@@ -101,13 +112,48 @@
     }
 
 </script>
+    {#if showDuplicateTestsModal}
+        <Modal on:close="{() => showDuplicateTestsModal = false}">
+            <div slot="header">
+                <h2 class="text-danger">
+                Duplicate test selected<br>
+                </h2>
+            </div>
 
+            <p>This test has already been selected, test entries must be unique.
+            <br>
+            If you would like to run a test multiple times, this feature is currently only available in engineering mode of the SPOT application.</p>
+        </Modal>
+    {/if}
     <div class="lists">
+        {#if showInstructions}
+        <Modal on:close="{() => showInstructions = false}">
+            <div slot="header">
+                <h2 class="text-info">
+                How to use the test builder
+                </h2>
+            </div>
+            <ol>
+                <li>Enter the part number for the product of the test list you'd like to create</li>
+                <li>Choose which tester you'd like to build a test list for</li>
+                <li>Choose the family the part belongs to (will be removed for existing part numbers in the future)</li>
+                <li>Click to expand any available test, view and edit its limits, then 'add to selected'</li>
+                <li>Re-arrange your 'selected tests' to run in the order you'd prefer</li>
+                <li>Click 'Save test list' to download your file</li>
+            </ol>
+            <hr>
+            <h2 class="text-info">What is the test builder?</h2>
+            <p>The test builder allows a user to easily view what software capabilities a tester currently supports and gives a simple interface to adjust limits for existing parts and create limits for new parts.</p>
+        </Modal>
+    {/if}
         <form>
-            <h1>Test Builder</h1>
-            <div>
+            <div id="heading-helper">
+                <h1>Test Builder</h1>
+                <button type="button" class="info btn-info" on:click={ handleClickHelp }>?</button>
+            </div>
+            <div class="form-group has-success">
                 <label>Part Number</label>
-                <input type="text" bind:value={partNumberInput} placeholder="e.g. 78350777"/>
+                <input type="text" class="form-control" class:is-valid="{isPartNumberValid}" bind:value={partNumberInput} placeholder="e.g. 78350777"/>
             </div>
             <div class="select">
                 <label>Station Type</label>
@@ -117,16 +163,12 @@
                 <label>Production Cell</label>
                 <Select items={cellItems} bind:selectedValue={selectedCells} placeholder={placholderString} {groupBy} {optionIdentifier}></Select>
             </div>
-            <!-- <div>
-            <label> File Name</label>
-            <input type="text" bind:value={exportName} placeholder="file name"/>
-            </div> -->
             <div>
                 <button type="button" class="btn" class:btn-primary="{isCreateDisabled}" 
                 class:btn-success="{!isCreateDisabled}" on:click={handleExport} 
                 disabled={isCreateDisabled}>Save Test List
                 </button>
-                <small id="emailHelp" class="form-text text-muted">After selecting tests, you can download the list.</small>
+                <small class="form-text text-muted">After selecting tests, you can download the list.</small>
             </div>
         </form>
 
@@ -187,6 +229,12 @@ form input{
     height: 42px;
     padding-left: 1rem;
     border-width: thin;
+    border-color: rgba(63, 79, 95, 0.25);
+    font-weight: 200;
+}
+form input:focus{
+    border-color: var(--borderFocusColor, #006FE8);
+    outline: none;
 }
 
 .lists{
@@ -209,14 +257,6 @@ form input{
     --placeholderColor: default;
     padding: 1rem 0;
     border: initial;
-}
-
-.section{
-    /* fixed subtext height for alignment, check you don't have text collision if you adjust this */
-    height: 2.2rem; 
-    margin-bottom: .8rem;
-    text-overflow: '';
-    overflow: hidden;
 }
 
 small{
@@ -245,5 +285,19 @@ button[disabled]{
 
 .enabled{
     color: green;
+}
+
+#heading-helper{
+    display: inline-flex;
+    flex-direction: row;
+}
+#heading-helper button{
+    font-size: 1.6rem;
+    margin-left: 1rem;
+    margin-top: 0.4rem;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 2rem;
+    text-align: center;
 }
 </style>
