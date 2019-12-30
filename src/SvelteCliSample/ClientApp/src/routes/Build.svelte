@@ -176,41 +176,42 @@
             <h2>Available Tests</h2>
             <small class="form-text text-muted section">These are the default tests supported at the moment.<br>Feel free to edit some limits and add them to your current test list.</small>
 
+            <div class="available">
             {#if $availableTests}
                 {#each $availableTests as item, index}
                 <Test {item} {index} collapsible={true}>
                     <button slot="actionButton" type="button" class="btn btn-warning" on:click={()=> addTest(item)}>
-                    Add To Selected Tests
+                    Add
                     </button>
                 </Test>
                 {/each}
             {:else}
                 <p><em>Loading...</em></p>
             {/if}
+            </div>
         </div>
         <div class="tests">
             <h2 class="text-warning">Selected Tests</h2>
             <small class="form-text text-muted section">These are the tests that get saved.<br>Drag them into the order you want to test them!</small>
-
+            <div class="dropzone" class:empty={!selectedTests.length}>
             {#if selectedTests.length}
                 <SortableList 
                 bind:list={selectedTests} 
-                    key="id" 
+                key="id" 
                 on:sort={sortSelectedList}
                 let:item
                 let:index >
                     <Test {item} {index} collapsible={false}>
                         <span slot="indexNumber" class="orderIndex">{index+1}</span>
                         <button slot="actionButton" type="button" class="btn btn-danger" on:click={()=> removeTest(item)}>
-                        Remove From Selected Tests
+                        Remove
                         </button>
                     </Test>
                 </SortableList>
             {:else}
-                <div style="text-align:center; height: 300px; display: flex; align-items: center;">
-                <em style="padding:4rem;">No tests selected</em>
-                </div>
+                <em>No tests selected</em>
             {/if}
+            </div>
         </div>
     </div>
 
@@ -244,9 +245,8 @@ form input:focus{
     justify-content: space-around;
 }
 .tests{
-    width: 33rem;
+    width: 35rem;
     padding-left: 2rem;
-    padding-right: 2rem;
 }
 .select{
     --borderRadius: 255px 25px 225px 25px/25px 225px 25px 255px;
@@ -257,10 +257,6 @@ form input:focus{
     --placeholderColor: default;
     padding: 1rem 0;
     border: initial;
-}
-
-small{
-    padding-bottom: 2rem;
 }
 
 .btn-danger:hover{
@@ -299,5 +295,21 @@ button[disabled]{
     width: 2rem;
     border-radius: 2rem;
     text-align: center;
+}
+.dropzone{
+    border: dashed 1px black;
+    border-radius: 0.2em;
+    min-height: 30rem;
+    padding: 1rem;
+}
+.available, .dropzone{
+    margin-top: 2rem;
+}
+.empty em{
+    line-height: 30rem;
+}
+.empty{
+    text-align: center;
+    height: 30rem;
 }
 </style>
