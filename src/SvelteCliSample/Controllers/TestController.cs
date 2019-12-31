@@ -30,8 +30,8 @@ namespace SvelteCliSample.Controllers
                 Result = "",
                 TestStatus = "",
                 TestValue = "",
-                TestValueType = TestValueType.PassFail
-
+                TestValueType = TestValueType.PassFail,
+                GUID = Guid.NewGuid()
             };
             var testDummy2 = new Test(){
                 TestName = "Digital Input 2 Hi",
@@ -41,17 +41,21 @@ namespace SvelteCliSample.Controllers
                 Result = "",
                 TestStatus = "",
                 TestValue = "",
-                TestValueType = TestValueType.PassFail
+                TestValueType = TestValueType.PassFail,
+                GUID = Guid.NewGuid()
+
             };
             var testDummy3 = new Test(){
                 TestName = "Analog Input 1, 0-5V",
                 TestCode = "AIN105V",
-                LowerLimit = "4.5",
+                LowerLimit = "4.4",
                 UpperLimit = "4.7",
                 Result = "",
                 TestStatus = "",
                 TestValue = "",
-                TestValueType = TestValueType.Double
+                TestValueType = TestValueType.Double,
+                GUID = Guid.NewGuid()
+
             };
 
             var testList = new List<Test>{
@@ -59,6 +63,7 @@ namespace SvelteCliSample.Controllers
             testList.Add(testDummy);
             testList.Add(testDummy2);
             testList.Add(testDummy3);
+            
             return testList;
         }
     }

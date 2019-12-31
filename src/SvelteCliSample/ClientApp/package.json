@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "navaid": "^1.0.2",
-    "svelte-select": "^3.3.0",
-    "svelte-sortable-list": "^1.1.0"
+    "svelte-select": "^3.3.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.3",

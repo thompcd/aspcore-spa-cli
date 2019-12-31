@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import SortableList from 'svelte-sortable-list';
+    import SortableList from '../components/SortableList.svelte';
     import Test from '../components/Test.svelte';
     import { availableTests } from '../store/tests.js'
     import Select from 'svelte-select';
@@ -12,11 +12,11 @@
         fetch('/api/tests')
             .then(response => response.json())
             .then(data => {
-                console.log("server data", data)
                 $availableTests = data;
             });
     });
-    $: console.log("avilable tests", $availableTests)
+    $: console.log("available tests", $availableTests)
+    $: console.log("se tests", selectedTests)
     let params;
     let exportName = "TestList";
     let partNumberInput = "";
@@ -54,7 +54,7 @@
             showDuplicateTestsModal = true;
             return
         }
-        //add a tracking guid to the object to allow it to be
+
         selectedTests.push(item)
         selectedTests = selectedTests;
     }
@@ -113,11 +113,12 @@
                 <p>The test builder allows a user to easily view what software capabilities a tester currently supports and gives a simple interface to adjust limits for existing parts and create limits for new parts.</p>
             </Modal>
         {/if}
+        <div class="entry-form">
+        <div id="heading-helper">
+            <h1>Test Builder</h1>
+            <button type="button" class="info btn-info" on:click={ handleClickHelp }>?</button>
+        </div>
         <form>
-            <div id="heading-helper">
-                <h1>Test Builder</h1>
-                <button type="button" class="info btn-info" on:click={ handleClickHelp }>?</button>
-            </div>
             <div class="form-group has-success">
                 <label>Part Number</label>
                 <input type="text" class="form-control" class:is-valid="{isPartNumberValid}" bind:value={partNumberInput} placeholder="e.g. 78350777"/>
@@ -138,15 +139,16 @@
                 <small class="form-text text-muted">After selecting tests, you can download the list.</small>
             </div>
         </form>
+        </div>
 
         <div class="tests" ref="tests">
             <h2>Available Tests</h2>
             <small class="form-text text-muted section">These are the default tests supported at the moment.<br>Feel free to edit some limits and add them to your current test list.</small>
 
-            <div class="available" class:empty={availableTests.length > 0}>
+            <ul class="available" class:empty={availableTests.length > 0}>
             {#if $availableTests.length > 0}
                 {#each $availableTests as item, index}
-                <Test {item} {index} collapsible={true}>
+                <Test {item} {index} marginBottom={1} collapsible={true}>
                     <button slot="actionButton" type="button" class="btn btn-warning" on:click={()=> addTest(item)}>
                     Add
                     </button>
@@ -157,16 +159,16 @@
             {:else}
                 <p><em>No tests found</em></p>
             {/if}
-            </div>
+            </ul>
         </div>
         <div class="tests">
             <h2 class="text-warning">Selected Tests</h2>
-            <small class="form-text text-muted section">These are the tests that get saved.<br>Drag them into the order you want to test them!</small>
+            <small class="form-text text-muted section">These are the tests that get saved.<br><b>Drag</b> them into the order you want to test them</small>
             <div class="dropzone" class:empty={!selectedTests.length}>
             {#if selectedTests.length}
                 <SortableList 
                 bind:list={selectedTests} 
-                key="GUID" 
+                key="guid" 
                 on:sort={sortSelectedList}
                 let:item
                 let:index >
@@ -206,7 +208,10 @@ form input:focus{
     border-color: var(--borderFocusColor, #006FE8);
     outline: none;
 }
-
+.entry-form{
+    display: flex;
+    flex-direction: column;
+}
 .lists{
     width: 100%;
     display: flex;
@@ -255,6 +260,7 @@ button[disabled]{
 #heading-helper{
     display: inline-flex;
     flex-direction: row;
+    align-items: center;
 }
 #heading-helper button{
     font-size: 1.6rem;
@@ -270,9 +276,15 @@ button[disabled]{
     border-radius: 0.2em;
     min-height: 30rem;
     padding: 1rem;
+    padding-bottom: 0;
+    /* This damn thing is still off by a px per test. I think its the draggables causing it */
+    margin-top: calc(1rem - 2px);
 }
-.available, .dropzone{
+.available{
     margin-top: 2rem;
+}
+ul{
+    margin-bottom: 0;
 }
 
 .empty{

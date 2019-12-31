@@ -8,6 +8,7 @@
 	export let item;
     export let collapsible = false;
     export let index;
+    export let marginBottom = 0;
 
     let collpased = false;
 
@@ -41,7 +42,7 @@
 
 </script>
 
-<div class="test-entry" class:selected="{collapsible === false}">
+<div class="test-entry" class:selected="{collapsible === false}" style="margin-bottom:{marginBottom}rem">
     <h1>
         <slot name="indexNumber"><!-- optional fallback --></slot>
         {item.testName}
@@ -99,7 +100,7 @@
         padding: 1rem;
         border: solid 1px #AAA;
         border-radius: 1rem;
-        margin-bottom: 1rem;
+        /* margin-bottom: 1rem; */
     }
     .selected:hover{
         cursor: move;

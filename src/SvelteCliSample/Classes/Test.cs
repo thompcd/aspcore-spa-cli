@@ -9,20 +9,19 @@ using System.Runtime.CompilerServices;
 
 namespace TestFramework
 {
-    public enum TestType
+    public class TestValueType
     {
-        User,
-        Automated,
-        PowerCycling
+        public const string String = "String";
+        public const string Boolean = "Bool";
+        public const string Double = "Double";
+        public const string Integer = "Int";
+        public const string PassFail = "PassFail";
     }
-
-    public enum TestValueType
+    public class TestType
     {
-        String,
-        Bool,
-        Double,
-        Int,
-        PassFail
+        public const string User = "User";
+        public const string Automated = "Automated";
+        public const string PowerCycling = "PowerCycling";
     }
 
     public class LeakLog
@@ -132,42 +131,44 @@ namespace TestFramework
             }
         }
 
-        public TestValueType TestValueType; //used to cast type from string
-        public string TestClass;
-        public string TestCode;
-        public string ExpectedValue;
-        public uint SetupPGN;
-        public uint SendPGN;
-        public uint ReceivePGN;
+        public string TestValueType {get; set;} //used to cast type from string
+        public string TestClass {get; set;}
+        public string TestCode {get; set;}
+        public string ExpectedValue {get; set;}
+        public uint SetupPGN {get; set;}
+        public uint SendPGN {get; set;}
+        public uint ReceivePGN {get; set;}
         public int ResponseNumBytes;
-        public byte SendByte1;
-        public byte SendByte2;
-        public byte SendByte3;
-        public byte SendByte4;
-        public byte SendByte5;
-        public byte SendByte6;
-        public byte SendByte7;
-        public byte SendByte8;
+        public byte SendByte1 {get; set;}
+        public byte SendByte2 {get; set;}
+        public byte SendByte3 {get; set;}
+        public byte SendByte4 {get; set;}
+        public byte SendByte5 {get; set;}
+        public byte SendByte6 {get; set;}
+        public byte SendByte7 {get; set;}
+        public byte SendByte8 {get; set;}
         public bool OldTestHeadUsed;
-        public TestType TypeOfTest;
+        public string TypeOfTest {get; set;}
         public string DateTime;
         public string MacAddress;
         public string SerialNumber;
         public string PartNumber;
         public string ModelNumber;
-        public string GUID;
+        public Guid GUID {get; set;}
         public string OtherData1;
         public string OtherData2;
         public int PollWait;
-        public string Phase;
+        public string Phase {get; set;}
         public bool WriteToDatabase = true;
         
         #endregion
 
-        public Test(){}
+        public Test(){
+            GUID = new Guid();
+        }
 
 
-        public Test(string testName, string lowerLimit, string upperLimit, string testCode, uint sendPGN = 0, uint receivePGN = 0, string testClass = "", TestValueType testType=TestValueType.String)
+        public Test(string testName, string lowerLimit, string upperLimit, string testCode, uint sendPGN = 0, uint receivePGN = 0, string testClass = "")
         {
             TestName = testName;
             LowerLimit = lowerLimit;
@@ -175,7 +176,7 @@ namespace TestFramework
             TestCode = testCode;
             SendPGN = sendPGN;
             ReceivePGN = receivePGN;
-            TestValueType = testType;
+            GUID = new Guid();
 
             if(testClass == "")
             {

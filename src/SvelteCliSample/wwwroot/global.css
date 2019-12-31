@@ -20,6 +20,11 @@ a {
 	color: inherit;
 }
 
+ul {
+	margin-bottom: 0;
+	padding-left: 0;
+}
+
 code {
 	font-family: menlo, inconsolata, monospace;
 	font-size: calc(1em - 2px);
@@ -27,6 +32,10 @@ code {
 	background-color: #f0f0f0;
 	padding: 0.2em 0.4em;
 	border-radius: 2px;
+}
+
+small{
+	font-size: 90%;
 }
 
 @media (min-width: 400px) {
