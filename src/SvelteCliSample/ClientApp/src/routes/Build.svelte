@@ -5,7 +5,18 @@
     import { availableTests } from '../store/tests.js'
     import Select from 'svelte-select';
     import Modal from '../components/Modal.svelte';
-    
+    import { stationItems } from '../store/stations.js';
+    import { cellItems } from '../store/cells.js';
+
+    onMount(() => {
+        fetch('/api/tests')
+            .then(response => response.json())
+            .then(data => {
+                console.log("server data", data)
+                $availableTests = data;
+            });
+    });
+    $: console.log("avilable tests", $availableTests)
     let params;
     let exportName = "TestList";
     let partNumberInput = "";
@@ -21,7 +32,8 @@
     (!isPartNumberValid) || 
     (selectedCells === undefined) || 
     (selectedStations === undefined) )
-    
+
+    //default export file name
     $: {
         if (!isCreateDisabled){
             exportName = `${partNumberInput}-${selectedCells.value}-${selectedStations.value}`;
@@ -35,51 +47,6 @@
     const handleClickHelp = () => { showInstructions = true };
     const groupBy = (item) => item.group;
 
-    const stationItems = [
-    {value: 'PREP', label: 'Prepare for Production', group: 'Testing'},
-    {value: 'EOLT', label: 'End of Line Tester', group: 'Testing'},
-    {value: 'PROG', label: 'End of Line Programmer', group: 'Programming'},
-    {value: 'LEAK', label: 'Leak Tester', group: 'Assembly'},
-    {value: 'VIZN', label: 'Visual Inspection', group: 'Assembly'},
-    {value: 'GLUE', label: 'Automated Glue Machine', group: 'Assembly'},
-    {value: 'BONE', label: 'PCBA Programmer', group: 'Programming'},
-    {value: 'TINY', label: 'Tiny Tester', group: 'Testing'}
-    ];
-    
-    const cellItems = [
-    {value: '5812', label: 'HV1200 (SKINNY PEAT)', group: 'M2'},
-    {value: '5812', label: 'PV1200 (SKINNY PEAT)', group: 'M2'},
-    {value: '5812', label: 'HV1100 (BLACK LABEL)', group: 'M2'},
-    {value: '5812', label: 'PV1100 (BLACK LABEL)', group: 'M2'},
-    {value: '5813', label: 'PV350', group: 'IMX35'},
-    {value: '5813', label: 'PV380', group: 'IMX35'},
-    {value: '5813', label: 'MPC10 (V1)', group: 'TI'},
-    {value: '5813', label: 'MPC10 (V2)', group: 'ST'},
-    {value: '5813', label: 'MPC20 (V1)', group: 'TI'},
-    {value: '5813', label: 'MPC20 (V2)', group: 'ST'},
-    {value: '5813', label: 'CXM110', group: 'ST'},
-    {value: '5814', label: 'HV450', group: 'IMX35'},
-    {value: '5814', label: 'PV480', group: 'IMX35'},
-    {value: '5814', label: 'PV485', group: 'IMX35'},
-    {value: '5814', label: 'HV700', group: 'IMX35'},
-    {value: '5814', label: 'PV780', group: 'IMX35'},
-    {value: '5814', label: 'HV700BP', group: 'M2'},
-    {value: '5814', label: 'PV780B', group: 'M2'},
-    {value: '5821', label: 'FIREBALL', group: 'M2'},
-    {value: '5823', label: 'FURIOUS', group: 'M2'},
-    {value: '5824', label: 'HV750 (SCALLYWAG)', group: 'M2'},
-    {value: '5827', label: 'TV480 (ORION)', group: 'IMX35'},
-    {value: '5828', label: 'PV500 (PATRON)', group: 'G2'},
-    {value: '5830', label: 'GPS PUCK', group: 'H8'},
-    {value: '5831', label: 'LM4', group: 'G2'},
-    {value: '5832', label: 'LM7', group: 'G2'},
-    {value: '5875', label: 'BUTTONPAD', group: 'H8'},
-    {value: '5875', label: 'PDM', group: 'H8'},
-    {value: '5875', label: 'XMD', group: 'H8'},
-    {value: '5809', label: 'PV101', group: 'MONOCOLOR'},
-    {value: '5810', label: 'AQUASTAR', group: 'H8'},
-    ];
-
     function addTest(item) {
         const retVal = selectedTests.find( obj => obj === item)
 
@@ -87,7 +54,7 @@
             showDuplicateTestsModal = true;
             return
         }
-
+        //add a tracking guid to the object to allow it to be
         selectedTests.push(item)
         selectedTests = selectedTests;
     }
@@ -127,25 +94,25 @@
     {/if}
     <div class="lists">
         {#if showInstructions}
-        <Modal on:close="{() => showInstructions = false}">
-            <div slot="header">
-                <h2 class="text-info">
-                How to use the test builder
-                </h2>
-            </div>
-            <ol>
-                <li>Enter the part number for the product of the test list you'd like to create</li>
-                <li>Choose which tester you'd like to build a test list for</li>
-                <li>Choose the family the part belongs to (will be removed for existing part numbers in the future)</li>
-                <li>Click to expand any available test, view and edit its limits, then 'add to selected'</li>
-                <li>Re-arrange your 'selected tests' to run in the order you'd prefer</li>
-                <li>Click 'Save test list' to download your file</li>
-            </ol>
-            <hr>
-            <h2 class="text-info">What is the test builder?</h2>
-            <p>The test builder allows a user to easily view what software capabilities a tester currently supports and gives a simple interface to adjust limits for existing parts and create limits for new parts.</p>
-        </Modal>
-    {/if}
+            <Modal on:close="{() => showInstructions = false}">
+                <div slot="header">
+                    <h2 class="text-info">
+                    How to use the test builder
+                    </h2>
+                </div>
+                <ol>
+                    <li>Enter the part number for the product of the test list you'd like to create</li>
+                    <li>Choose which tester you'd like to build a test list for</li>
+                    <li>Choose the family the part belongs to (will be removed for existing part numbers in the future)</li>
+                    <li>Click to expand any available test, view and edit its limits, then 'add to selected'</li>
+                    <li>Re-arrange your 'selected tests' to run in the order you'd prefer</li>
+                    <li>Click 'Save test list' to download your file</li>
+                </ol>
+                <hr>
+                <h2 class="text-info">What is the test builder?</h2>
+                <p>The test builder allows a user to easily view what software capabilities a tester currently supports and gives a simple interface to adjust limits for existing parts and create limits for new parts.</p>
+            </Modal>
+        {/if}
         <form>
             <div id="heading-helper">
                 <h1>Test Builder</h1>
@@ -176,8 +143,8 @@
             <h2>Available Tests</h2>
             <small class="form-text text-muted section">These are the default tests supported at the moment.<br>Feel free to edit some limits and add them to your current test list.</small>
 
-            <div class="available">
-            {#if $availableTests}
+            <div class="available" class:empty={availableTests.length > 0}>
+            {#if $availableTests.length > 0}
                 {#each $availableTests as item, index}
                 <Test {item} {index} collapsible={true}>
                     <button slot="actionButton" type="button" class="btn btn-warning" on:click={()=> addTest(item)}>
@@ -185,8 +152,10 @@
                     </button>
                 </Test>
                 {/each}
+            {:else if availableTests === undefined}
+                <p><em>Loading...</em></p>    
             {:else}
-                <p><em>Loading...</em></p>
+                <p><em>No tests found</em></p>
             {/if}
             </div>
         </div>
@@ -197,7 +166,7 @@
             {#if selectedTests.length}
                 <SortableList 
                 bind:list={selectedTests} 
-                key="id" 
+                key="GUID" 
                 on:sort={sortSelectedList}
                 let:item
                 let:index >
@@ -305,11 +274,13 @@ button[disabled]{
 .available, .dropzone{
     margin-top: 2rem;
 }
-.empty em{
-    line-height: 30rem;
-}
+
 .empty{
     text-align: center;
     height: 30rem;
+    border: dashed 1px black;
+}
+.empty em{
+    line-height: 30rem;
 }
 </style>
