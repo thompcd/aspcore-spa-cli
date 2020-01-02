@@ -219,7 +219,7 @@ form input:focus{
     justify-content: space-around;
 }
 .tests{
-    width: 35rem;
+    width: 40rem;
     padding-left: 2rem;
 }
 .select{
